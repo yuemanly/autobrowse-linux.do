@@ -4,7 +4,7 @@
 // @namespace   Violentmonkey Scripts
 // @match       https://linux.do/*
 // @grant       none
-// @version     1.1
+// @version     1.1.1
 // @author      yuemanly
 // @license      MIT
 // @icon         https://www.google.com/s2/favicons?domain=linux.do
