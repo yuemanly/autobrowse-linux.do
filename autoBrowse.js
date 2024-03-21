@@ -3,7 +3,6 @@
 // @description Automatically browse posts in linux.do
 // @namespace   Violentmonkey Scripts
 // @match       https://linux.do/*
-// @match       https://linux.do/latest?ascending=false&order=posts
 // @grant       none
 // @version     1.1
 // @author      yuemanly
