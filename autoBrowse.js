@@ -5,10 +5,12 @@
 // @match       https://linux.do/*
 // @match       https://linux.do/latest?ascending=false&order=posts
 // @grant       none
-// @version     1.0
+// @version     1.1
 // @author      yuemanly
 // @license      MIT
 // @icon         https://www.google.com/s2/favicons?domain=linux.do
+// @downloadURL https://update.greasyfork.org/scripts/490382/autoBrowse-linuxdo.user.js
+// @updateURL https://update.greasyfork.org/scripts/490382/autoBrowse-linuxdo.meta.js
 // ==/UserScript==
 
 var speed = 10;
@@ -21,7 +23,10 @@ var pauseTimeout;
 var isScrolling = false;
 
 function navigateNextTopic() {
-    const URLS = ["https://linux.do/new", "https://linux.do/top", "https://linux.do/latest?ascending=false&order=posts"];
+    const URLS = ["https://linux.do/new",
+                  "https://linux.do/c/general/4/l/latest",
+                  "https://linux.do/c/general/qa/28/l/latest",
+                  "https://linux.do/latest"];
     const randomIndex = Math.floor(Math.random() * URLS.length);
     const newURL = URLS[randomIndex];
     console.log("Navigating to new URL: " + newURL);
@@ -62,27 +67,37 @@ function stopScrolling() {
 }
 
 function findLinkAndRedirect() {
-    const topicPattern = "/t/topic"
+    const topicPattern = "/t/topic";
     var links = document.links;
     var matchingLinks = [];
-
     for (var i = 0; i < links.length; i++) {
         if (links[i].href.indexOf(topicPattern) !== -1) {
             matchingLinks.push(links[i].href);
         }
-        if (matchingLinks.length == 5) {
+        if (matchingLinks.length == 8) { // 找8个链接，随机挑一个
             break;
         }
     }
 
     if (matchingLinks.length > 0) {
         var randomIndex = Math.floor(Math.random() * matchingLinks.length);
-        window.location.href = matchingLinks[randomIndex];
+        var newLocation = matchingLinks[randomIndex];
+        // 滚动页面
+        var scrollInterval;
+            scrollInterval = setInterval(function() {
+                window.scrollBy(0, scrollDuration/2);  // 每次滚动像素
+                clearInterval(scrollInterval);
+            }, 1000);  // 每1秒滚动一次
+        // 延长停顿时间，等待滚动结束后再跳转
+        setTimeout(function(){
+            window.location.href = newLocation;
+        }, 2000);  // 2秒后跳转
     }
 }
 
 function setButtonDisabled() {
-    button.textContent = "停止"
+    button.textContent = "导航中"
+    button.style.color = "#f0f0f0";
     button.disabled = true;
 }
 
@@ -94,7 +109,7 @@ button.style.bottom = "30%";
 button.style.transform = "translateY(-50%)";
 button.style.padding = "10px 20px";
 button.style.fontSize = "20px";
-button.style.backgroundColor = "#f0f0f0"; // 浅灰色背景
+button.style.backgroundColor = "white"; // 白色背景
 button.style.border = "1px solid #ddd"; // 浅灰色边框
 button.style.padding = "10px 20px"; // 内边距
 button.style.borderRadius = "5px"; // 圆角
